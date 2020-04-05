@@ -13,10 +13,6 @@ services:
     expose:
       - "8080"
 
-    # Mount the web directory within the container at /app/sharkcop-api
-    volumes:
-      - ./sharkcop-api:/app/sharkcop-api
-
     # Link the containers together so they can talk to one another
     links:
       - redis
@@ -50,7 +46,7 @@ services:
     depends_on:
       - sharkcop-api
 
-    # Define the sharkcop-webinspector
+  # Define the sharkcop-webinspector
   sharkcop-webinspector:
     build: ./sharkcop-webinspector
     restart: always
