@@ -1,0 +1,9 @@
+[submodule "api/sharkcop-api"]
+	path = api/sharkcop-api
+	url = https://github.com/yitteam/sharkcop-api
+[submodule "sharkcop-api"]
+	path = sharkcop-api
+	url = https://github.com/yitteam/sharkcop-api
+[submodule "sharkcop-webinspector"]
+	path = sharkcop-webinspector
+	url = https://github.com/yitteam/sharkcop-webinspector

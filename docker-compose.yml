@@ -58,7 +58,7 @@ services:
     expose:
       - "8080"
 
-    # Mount the web directory within the container at /app/sharkcop-api
+    # Mount the web directory within the container at /app/sharkcop-webinspector
     volumes:
       - ./sharkcop-webinspector:/app/sharkcop-webinspector
     
@@ -72,7 +72,11 @@ services:
   redis:
     image: redis
     container_name: cache
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
     expose:
       - 6379
+    volumes:
+      - ./data/redis:/data
 
   

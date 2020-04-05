@@ -1,0 +1,3 @@
+[submodule "sharkcop-webinspector"]
+	path = sharkcop-webinspector
+	url = https://github.com/yitteam/sharkcop-webinspector
