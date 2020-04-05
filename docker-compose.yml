@@ -1,0 +1,78 @@
+version: '3'
+services:
+  # Define the api web application
+  sharkcop-api:
+
+    # Build the Dockerfile that is in the web directory
+    build: ./sharkcop-api
+
+    # Always restart the container regardless of the exit status; try and restart the container indefinitely
+    restart: always
+
+    # Expose port 8000 to other containers (not to the host of the machine)
+    expose:
+      - "8080"
+
+    # Mount the web directory within the container at /app/sharkcop-api
+    volumes:
+      - ./sharkcop-api:/app/sharkcop-api
+
+    # Link the containers together so they can talk to one another
+    links:
+      - redis
+
+    # Pass environment variables to the flask container (this debug level lets you see more useful information)
+    environment:
+      port: 8080
+      REDIS_URL: redis://cache
+
+
+    # Deploy with three replicas in the case one of the containers fails (only in Docker Swarm)
+    deploy:
+      mode: replicated
+      replicas: 3
+
+  # Define the NGINX forward proxy container
+  nginx:
+
+    # build the nginx Dockerfile: http://bit.ly/2kuYaIv
+    build: reverse-proxy/
+    restart: always
+
+    # Expose port 80 to the host machine
+    ports:
+      - "80:80"
+    deploy:
+      mode: replicated
+      replicas: 3
+
+    # The application needs to be available for NGINX to make successful proxy requests
+    depends_on:
+      - sharkcop-api
+
+    # Define the sharkcop-webinspector
+  sharkcop-webinspector:
+    build: ./sharkcop-webinspector
+    restart: always
+
+    expose:
+      - "8080"
+
+    # Mount the web directory within the container at /app/sharkcop-api
+    volumes:
+      - ./sharkcop-webinspector:/app/sharkcop-webinspector
+    
+    links:
+      - sharkcop-api
+    
+    deploy:
+      mode: replicated
+      replicas: 3
+  
+  redis:
+    image: redis
+    container_name: cache
+    expose:
+      - 6379
+
+  
